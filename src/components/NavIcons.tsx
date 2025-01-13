@@ -2,26 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import CartModel from "./CartModel";
 
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  const router = useRouter();
+
+  // TEMPORARY -- REMOVE ONCE AUTH ADDED
+  const isLoggedIn = true;
+  //
+
+  const handleProfile = () => {
+    if (!isLoggedIn) {
+      router.push("/login");
+    }
+    setIsProfileOpen((prev) => !prev);
+  };
+
   return (
-    <div className="flex items-center gap-4 xl:gap-6">
-      <Image
-        src="/profile.png"
-        alt=""
-        width={24}
-        height={24}
-        className="cursor-pointer"
-        onClick={() => setIsProfileOpen((prev) => !prev)}
-      />
+    <div className="flex items-center gap-4 xl:gap-6 relative">
+      <Image src="/profile.png" alt="" width={24} height={24} className="cursor-pointer" onClick={handleProfile} />
       {isProfileOpen && (
-        <div className="bg-gray-800 text-blue-300 p-5 rounded-lg absolute top-16 flex flex-col gap-2 ">
-          <Link href="">Profile</Link>
-          <Link href="">Logout</Link>
+        <div className="absolute p-4 rounded-md  top-12 left-0 text-sm shadow-md">
+          <Link href="/">Profile</Link>
+          <div className="mt-2 cursor-pointer">Logout</div>
         </div>
       )}
       <Image src="/notification.png" alt="" width={24} height={24} className="cursor-pointer" />
@@ -34,9 +42,8 @@ const NavIcons = () => {
         onClick={() => setIsCartOpen((prev) => !prev)}
       />
       {isCartOpen && (
-        <div className="border-solid border-zinc-950 rounded-lg p5 absolute flex flex-col top-16">
-          <Link href="">MyCart</Link>
-          <Link href="">Checkout</Link>
+        <div className="absolute p-4 rounded-md  top-12 left-0 text-sm shadow-md">
+          <CartModel />
         </div>
       )}
     </div>
